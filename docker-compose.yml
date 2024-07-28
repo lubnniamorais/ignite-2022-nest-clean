@@ -1,0 +1,18 @@
+#version: '3.8'
+
+services:
+  postgres:
+    container_name: nest-clean-pg
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: nest-clean
+      PGDATA: /data/postgres
+      # O volumes é para caso um dia o container nest-clean-pg deixe de existir, então mantemos
+      # os dados do PostgreSQL dentro da nossa aplicação na pasta data que criamos na raiz. Então
+      # poderemos recriar o container sem perder nenhum dado do banco de dados.
+    volumes: 
+      - ./data/pg:/data/postgres
