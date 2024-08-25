@@ -10,11 +10,11 @@ import { Env } from 'src/env';
 
 import { Injectable } from '@nestjs/common';
 
-const tokenPayloadSchema = zod.object({
+const userPayloadSchema = zod.object({
   sub: zod.string().uuid(),
 });
 
-export type UserPayload = zod.infer<typeof tokenPayloadSchema>;
+export type UserPayload = zod.infer<typeof userPayloadSchema>;
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -24,11 +24,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: Buffer.from(publicKey, 'base64'),
-      algorithms: ['RSA256'],
+      algorithms: ['RS256'],
     });
   }
 
   async validate(payload: UserPayload) {
-    return tokenPayloadSchema.parse(payload);
+    return userPayloadSchema.parse(payload);
   }
 }

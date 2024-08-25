@@ -14,6 +14,6 @@ export class CreateQuestionController {
   async handle(@CurrentUser() user: UserPayload) {
     console.log(user);
 
-    return 'ok';
+    return user;
   }
 }
