@@ -12,8 +12,10 @@
       "semi": true // PARA COLOCAR O ; NO FINAL, EM INGLÊS semicolon
     }],
     "camelcase": "off",
+    "no-useless-constructor": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "no-useless-constructor": "off"
+    "@typescript-eslint/no-explicit-any":"off",
+    "no-new": "off"
   }
   // "jest": true
 }
