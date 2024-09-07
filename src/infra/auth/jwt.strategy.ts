@@ -6,7 +6,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { z as zod } from 'zod';
 
-import { Env } from 'src/env';
+import { Env } from '../env';
 
 import { Injectable } from '@nestjs/common';
 

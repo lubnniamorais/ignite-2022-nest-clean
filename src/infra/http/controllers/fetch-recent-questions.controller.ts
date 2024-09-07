@@ -1,9 +1,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe';
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '@/infra/prisma/prisma.service';
 import { z as zod } from 'zod';
 
 const pageQueryParamSchema = zod

@@ -7,12 +7,12 @@ import {
   UsePipes,
 } from '@nestjs/common';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '@/infra/prisma/prisma.service';
 
 import { hash } from 'bcryptjs';
 
 import { z as zod } from 'zod';
-import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 const createAccountBodySchema = zod.object({
   name: zod.string(),
