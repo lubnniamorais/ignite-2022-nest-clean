@@ -8,6 +8,7 @@ import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import { PrismaService } from '@/infra/database/prisma/prisma.service';
 
 import { z as zod } from 'zod';
+import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question';
 
 const createQuestionBodySchema = zod.object({
   title: zod.string(),
@@ -21,7 +22,7 @@ type CreateQuestionBodySchema = zod.infer<typeof createQuestionBodySchema>;
 @Controller('/questions')
 @UseGuards(JwtAuthGuard)
 export class CreateQuestionController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private createQuestion: CreateQuestionUseCase) {}
 
   @Post()
   async handle(
@@ -31,24 +32,31 @@ export class CreateQuestionController {
     const { title, content } = body;
     const userId = user.sub;
 
-    const slug = this.convertToSlug(title);
-
-    await this.prisma.question.create({
-      data: {
-        authorId: userId,
-        title,
-        content,
-        slug,
-      },
+    await this.createQuestion.execute({
+      title,
+      content,
+      authorId: userId,
+      attachementsIds: [],
     });
+
+    // const slug = this.convertToSlug(title);
+
+    // await this.prisma.question.create({
+    //   data: {
+    //     authorId: userId,
+    //     title,
+    //     content,
+    //     slug,
+    //   },
+    // });
   }
 
-  private convertToSlug(title: string): string {
-    return title
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u836f]/g, '')
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-');
-  }
+  // private convertToSlug(title: string): string {
+  //   return title
+  //     .toLowerCase()
+  //     .normalize('NFD')
+  //     .replace(/[\u0300-\u836f]/g, '')
+  //     .replace(/[^\w\s-]/g, '')
+  //     .replace(/\s+/g, '-');
+  // }
 }
