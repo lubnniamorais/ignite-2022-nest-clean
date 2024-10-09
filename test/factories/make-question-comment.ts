@@ -14,7 +14,7 @@ export function makeQuestionComment(
   override: Partial<QuestionCommentProps> = {},
   id?: UniqueEntityID,
 ) {
-  const questioncomment = QuestionComment.create(
+  const questionComment = QuestionComment.create(
     {
       authorId: new UniqueEntityID(),
       questionId: new UniqueEntityID(),
@@ -24,7 +24,7 @@ export function makeQuestionComment(
     id,
   );
 
-  return questioncomment;
+  return questionComment;
 }
 
 @Injectable()
