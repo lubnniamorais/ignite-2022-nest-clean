@@ -93,4 +93,50 @@ describe('Edit Question', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(NotAllowedError);
   });
+
+  it('should sync new and removed attachments when editing a question', async () => {
+    const newQuestion = makeQuestion(
+      {
+        authorId: new UniqueEntityID('author-1'),
+      },
+      new UniqueEntityID('question-1'),
+    );
+
+    await inMemoryQuestionsRepository.create(newQuestion);
+
+    inMemoryQuestionAttachementsRepository.questionAttachements.push(
+      makeQuestionAttachement({
+        questionId: newQuestion.id,
+        attachementId: new UniqueEntityID('1'),
+      }),
+
+      makeQuestionAttachement({
+        questionId: newQuestion.id,
+        attachementId: new UniqueEntityID('2'),
+      }),
+    );
+
+    const result = await sut.execute({
+      authorId: 'author-1',
+      questionId: newQuestion.id.toValue(),
+      title: 'Pergunta teste',
+      content: 'Conteúdo teste',
+      attachementsIds: ['1', '3'],
+    });
+
+    expect(result.isRight()).toBe(true);
+    expect(
+      inMemoryQuestionAttachementsRepository.questionAttachements,
+    ).toHaveLength(2);
+    expect(inMemoryQuestionAttachementsRepository.questionAttachements).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: new UniqueEntityID('1'),
+        }),
+        expect.objectContaining({
+          attachmentId: new UniqueEntityID('3'),
+        }),
+      ]),
+    );
+  });
 });
