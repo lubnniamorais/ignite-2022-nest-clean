@@ -89,4 +89,49 @@ describe('Edit Answer', () => {
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(NotAllowedError);
   });
+
+  it('should sync new and removed attachments when editing an answer', async () => {
+    const newAnswer = makeAnswer(
+      {
+        authorId: new UniqueEntityID('author-1'),
+      },
+      new UniqueEntityID('answer-1'),
+    );
+
+    await inMemoryAnswersRepository.create(newAnswer);
+
+    inMemoryAnswerAttachementsRepository.answerAttachements.push(
+      makeAnswerAttachement({
+        answerId: newAnswer.id,
+        attachementId: new UniqueEntityID('1'),
+      }),
+
+      makeAnswerAttachement({
+        answerId: newAnswer.id,
+        attachementId: new UniqueEntityID('2'),
+      }),
+    );
+
+    const result = await sut.execute({
+      authorId: 'author-1',
+      answerId: newAnswer.id.toValue(),
+      content: 'Conteúdo teste',
+      attachementsIds: ['1', '3'],
+    });
+
+    expect(result.isRight()).toBe(true);
+    expect(
+      inMemoryAnswerAttachementsRepository.answerAttachements,
+    ).toHaveLength(2);
+    // expect(inMemoryAnswerAttachementsRepository.answerAttachements).toEqual(
+    //   expect.arrayContaining([
+    //     expect.objectContaining({
+    //       attachmentId: new UniqueEntityID('1'),
+    //     }),
+    //     expect.objectContaining({
+    //       attachmentId: new UniqueEntityID('3'),
+    //     }),
+    //   ]),
+    // );
+  });
 });

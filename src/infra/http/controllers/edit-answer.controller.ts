@@ -16,6 +16,7 @@ import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-ans
 
 const editAnswerBodySchema = zod.object({
   content: zod.string(),
+  attachments: zod.array(zod.string().uuid()),
 });
 
 const bodyValidationPipe = new ZodValidationPipe(editAnswerBodySchema);
@@ -33,13 +34,13 @@ export class EditAnswerController {
     @CurrentUser() user: UserPayload,
     @Param('id') answerId: string,
   ) {
-    const { content } = body;
+    const { content, attachments } = body;
     const userId = user.sub;
 
     const result = await this.editAnswer.execute({
       content,
       authorId: userId,
-      attachementsIds: [],
+      attachementsIds: attachments,
       answerId,
     });
 
