@@ -16,3 +16,11 @@ services:
       # poderemos recriar o container sem perder nenhum dado do banco de dados.
     volumes: 
       - ./data/pg:/data/postgres
+
+  cache:
+    container_name: nest-clean-cache
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis:/data
